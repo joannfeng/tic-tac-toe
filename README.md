@@ -1,25 +1,10 @@
-# tic-tac-toe
+# Tictactoes
 
-# play against computer
-# player can choose symbol
-# X's goes first
-# computer chooses random, vacant space each turn
-# check for three in a row
-# display win/lose message
+A game of tictactoe through Python's Tkinter.
 
-#    |   |   
-# ---|---|---
-#    |   |   
-# ---|---|---
-#    |   |   
+The player can choose the X or O symbol and play against
+a CPU with randomized behavior. The objective of the game
+is to have 3 of your symbol in a row, and prevent the 
+CPU from winning.
 
-#  O | X | O 
-# ---|---|---
-#  X | O | X 
-# ---|---|---
-#  X | X | O  
-
-# the middle char in each square is dynamic (X, O, or button)
-
-# 9 buttons, 1 for each square
-# 
+(not yet finished)

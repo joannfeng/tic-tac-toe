@@ -35,7 +35,6 @@ frame.grid(row = 0,  column = 0)
 playerSymbol = "initPS"
 CPUSymbol = "initCS"
 v = IntVar()
-turn = 0 # keeps track of what turn it is
 
 def interpretSymbol():
     # selection = "You selected the option " + str(v.get())
@@ -82,16 +81,20 @@ def chooseSymbol():
 chooseSymbol()
 
 # when a button is pressed go here and change it to X or O
-def interpretButton(row, column):
-    buttonRow = row
-    buttonColumn = column
-    print(buttonRow)
-    print(buttonColumn)
-    data[row][column] = playerSymbol
-    updateGUI(row, column)
-    # info = button.grid_info()
-    # print((info["row"], info["column"]))
-    # data[info["row"]][info["column"]]
+# args here are the player coords
+def interpretButton(playerRow, playerColumn):
+    # player coords
+    data[playerRow][playerColumn] = playerSymbol
+
+    # cpu coords
+    cpuRow = random.randint(0, 2)
+    cpuColumn = random.randint(0, 2)
+    while data[cpuRow][cpuColumn] != ' ': # find blank
+        cpuRow = random.randint(0, 2)
+        cpuColumn = random.randint(0, 2)
+    data[cpuRow][cpuColumn] = CPUSymbol
+    updateGUI(playerRow, playerColumn, cpuRow, cpuColumn)
+
     
 data = [[' ', ' ', ' '], 
         [' ', ' ', ' '], 
@@ -129,47 +132,61 @@ def clickButton():
     button9.grid(row = 2, column = 2, padx = 20, pady = 20)
 
 
-def updateGUI(row, column):
-    turns += 1
+def updateGUI(playerRow, playerColumn, cpuRow, cpuColumn):
     # player moves
     for player in frame.grid_slaves():
-        if int(player.grid_info()["row"]) == row and int(player.grid_info()["column"]) == column:
+        if int(player.grid_info()["row"]) == playerRow and int(player.grid_info()["column"]) == playerColumn:
             player.grid_forget()
             strVar = StringVar()
             strVar.set(playerSymbol)
             playerText = Label(frame, textvariable = strVar)
-            playerText.grid(row = row, column = column, padx = 20, pady = 20)
-            #checkwins
-    if(turns >= 3):
-        checkWins():
+            playerText.grid(row = playerRow, column = playerColumn, padx = 20, pady = 20)
+            if checkWins(playerSymbol):
+                return
     # CPU moves
-    r = random.randint(0, 2)
-    c = random.randint(0, 2)
-    while(data[r][c] != ' '):
-        r = random.randint(0, 2)
-        c = random.randint(0, 2)
     for cpu in frame.grid_slaves():
-        if int(cpu.grid_info()["row"]) == r and int(cpu.grid_info()["column"]) == c:
+        if int(cpu.grid_info()["row"]) == cpuRow and int(cpu.grid_info()["column"]) == cpuColumn:
             cpu.grid_forget()
             strVar = StringVar()
             strVar.set(CPUSymbol)
             cpuText = Label(frame, textvariable = strVar)
-            cpuText.grid(row = r, column = c, padx = 20, pady = 20)
-            #checkwins
-    if(turns >= 3):
-        checkWins():
+            cpuText.grid(row = cpuRow, column = cpuColumn, padx = 20, pady = 20)
+            if checkWins(CPUSymbol):
+                return
     
-# check if three in a row of same symbol
-def checkWins():
-    if(data[][] == data[][] and data[][] == data[][]):
-    if(data[][] == data[][] and data[][] == data[][]):
-    if(data[][] == data[][] and data[][] == data[][]):
-    if(data[][] == data[][] and data[][] == data[][]):
-    if(data[][] == data[][] and data[][] == data[][]):
-    if(data[][] == data[][] and data[][] == data[][]):
-    if(data[][] == data[][] and data[][] == data[][]):
-    if(data[][] == data[][] and data[][] == data[][]):
-    else:
-    print("uwu")
+def checkHorizontal():
+    rows = 3
+    for r in range(rows):
+        print(r)
+        if data[r][0] != ' ':
+            if data[r][0] == data[r][1] and data[r][1] == data[r][2]:
+                return True
+    return False
+        
+def checkVertical():
+    columns = 3
+    for c in range(columns):
+        if data[0][c] != ' ':
+            if data[0][c] == data[1][c] and data[1][c] == data[2][c]:
+                return True
+    return False
 
+def checkDiagonal():
+    if((data[0][0] != ' ' and data[0][0] == data[1][1] and data[1][1] == data[2][2])
+    or (data[0][2] != ' ' and data[0][2] == data[1][1] and data[1][1] == data[2][0])):
+        return True
+    return False
+
+# check if three in a row of same symbol
+def checkWins(symbol):
+    b = checkHorizontal() or checkVertical() or checkDiagonal()
+    if (b):
+        s = " won!"
+        print(symbol + s)
+    else:
+        print("no win")
+    print(b)
+    print(data)
+    return b
+    
 root.mainloop()
